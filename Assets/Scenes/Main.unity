@@ -222,8 +222,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48d307a42c6bfda4cb6ae6ae66b873e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Fish
-  aquariumMin: {x: -8, y: -2}
-  aquariumMax: {x: 8, y: 4}
   turnSpeed: 2
   noiseScale: 0.5
 --- !u!1 &291319946
@@ -236,6 +234,7 @@ GameObject:
   m_Component:
   - component: {fileID: 291319948}
   - component: {fileID: 291319947}
+  - component: {fileID: 291319949}
   m_Layer: 0
   m_Name: Tank
   m_TagString: Untagged
@@ -273,6 +272,25 @@ Transform:
   - {fileID: 1432648848}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &291319949
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 291319946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70f1454128d541f58f8a5a7477b17932, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Tank
+  horizontalBoundary:
+    min: -8.5
+    max: 8.5
+  verticalBoundary:
+    min: -2.75
+    max: 4.6
+  boundariesVisible: 1
 --- !u!1 &357333355
 GameObject:
   m_ObjectHideFlags: 0
@@ -303,8 +321,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48d307a42c6bfda4cb6ae6ae66b873e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Fish
-  aquariumMin: {x: -8, y: -2}
-  aquariumMax: {x: 8, y: 4}
   turnSpeed: 2
   noiseScale: 0.5
 --- !u!212 &357333357
@@ -4097,8 +4113,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48d307a42c6bfda4cb6ae6ae66b873e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Fish
-  aquariumMin: {x: -8, y: -2}
-  aquariumMax: {x: 8, y: 4}
   turnSpeed: 2
   noiseScale: 0.5
 --- !u!212 &1608858907

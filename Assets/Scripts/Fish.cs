@@ -2,10 +2,7 @@ using UnityEngine;
 
 public class Fish : MonoBehaviour
 {
-    public Vector2 aquariumMin = new Vector2(-8f, -2f);
-    public Vector2 aquariumMax = new Vector2(8f, 4f);
-    
-    public float turnSpeed = 2f; // How fast the fish can change direction
+   public float turnSpeed = 2f; // How fast the fish can change direction
     public float noiseScale = 0.5f; // Controls the "wideness" of the turns (frequency)
     
     private float swimSpeed;
@@ -37,11 +34,11 @@ public class Fish : MonoBehaviour
 
         var nextPosition = transform.position + (Vector3)velocity * Time.deltaTime;
         
-        if (nextPosition.x < aquariumMin.x || nextPosition.x > aquariumMax.x)
+        if (nextPosition.x < Tank.Instance.horizontalBoundary.min || nextPosition.x > Tank.Instance.horizontalBoundary.max)
         {
             velocity.x *= -1f;
         }
-        if (nextPosition.y < aquariumMin.y || nextPosition.y > aquariumMax.y)
+        if (nextPosition.y < Tank.Instance.verticalBoundary.min || nextPosition.y > Tank.Instance.verticalBoundary.max)
         {
             velocity.y *= -1f;
         }
