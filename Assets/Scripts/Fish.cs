@@ -20,37 +20,70 @@ public class Fish : MonoBehaviour
 
     private void Update()
     {
+        Swim();
+    }
+
+    private void Swim()
+    {
+        var steerDirection = SampleSteeringDirection();
+
+        SteerTowards(steerDirection);
+
+        var targetPosition = transform.position + (Vector3)velocity * Time.deltaTime;
+        
+        SetPosition(targetPosition);
+
+        UpdateOrientation();
+    }
+
+    private float SampleSteeringDirection()
+    {
         var noiseValue = Mathf.PerlinNoise(Time.time * noiseScale, noiseOffset);
         
         // Map the noise (0 to 1) to a turning range [-1 to 1]
-        var turnDirection = (noiseValue * 2f) - 1f; 
+        var steerDirection = (noiseValue * 2f) - 1f;
         
-        var currentAngle = Mathf.Atan2(velocity.y, velocity.x) * Mathf.Rad2Deg;
-        
-        currentAngle += turnDirection * turnSpeed * Time.deltaTime * 60;
-        
-        velocity.x = Mathf.Cos(currentAngle * Mathf.Deg2Rad) * swimSpeed;
-        velocity.y = Mathf.Sin(currentAngle * Mathf.Deg2Rad) * swimSpeed;
+        return steerDirection;
+    }
 
-        var nextPosition = transform.position + (Vector3)velocity * Time.deltaTime;
-        
-        if (nextPosition.x < Tank.Instance.horizontalBoundary.min || nextPosition.x > Tank.Instance.horizontalBoundary.max)
+    private void SetPosition(Vector3 targetPosition)
+    {
+        if (targetPosition.x < Tank.Instance.horizontalBoundary.min || targetPosition.x > Tank.Instance.horizontalBoundary.max)
         {
             velocity.x *= -1f;
-        }
-        if (nextPosition.y < Tank.Instance.verticalBoundary.min || nextPosition.y > Tank.Instance.verticalBoundary.max)
-        {
-            velocity.y *= -1f;
+            targetPosition.x = Mathf.Clamp(targetPosition.x, Tank.Instance.horizontalBoundary.min, Tank.Instance.horizontalBoundary.max);
         }
         
-        transform.position = nextPosition;
+        if (targetPosition.y < Tank.Instance.verticalBoundary.min || targetPosition.y > Tank.Instance.verticalBoundary.max)
+        {
+            velocity.y *= -1f;
+            targetPosition.y = Mathf.Clamp(targetPosition.y, Tank.Instance.verticalBoundary.min, Tank.Instance.verticalBoundary.max);
+        }
+        
+        transform.position = targetPosition;
+    }
 
-        UpdateOrientation();
+    private void SteerTowards(float steerDirection)
+    {
+        // How much to rotate this frame
+        var targetAngle = steerDirection * turnSpeed * Time.deltaTime;
+
+        // Create a rotation around Z axis
+        var rotation = Quaternion.Euler(0, 0, targetAngle);
+
+        // Rotate the velocity vector
+        velocity = rotation * velocity;
+
+        // Keep speed constant
+        velocity = velocity.normalized * swimSpeed;
     }
     
     private void UpdateOrientation()
     {
         var direction = Mathf.Sign(velocity.x);
-        transform.localScale = new Vector3(direction, transform.localScale.y, transform.localScale.z); 
+        var scale = transform.localScale;
+        
+        scale.x = direction;
+        transform.localScale = scale;
     }
 }
