@@ -1,25 +1,35 @@
-using Noise;
 using UnityEngine;
+using Noise;
+using Random = UnityEngine.Random;
 
 public class Fish : MonoBehaviour
 {
-    public float turnSpeed = 2f; // How fast the fish can change direction
+    [SerializeField]
+    private FishData fishData;
+    
+    private SpriteRenderer spriteRenderer;
+    
     public float noiseScale = 0.5f; // Controls the "wideness" of the turns (frequency)
 
-    private float swimSpeed;
     private float noiseOffset;
 
     private Vector2 velocity;
 
     private IPerlinNoiseProvider perlinNoiseProvider;
 
+    private void Awake()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
     private void Start()
     {
-        noiseOffset = Random.Range(0, 1000f);
-        swimSpeed = Random.Range(1f, 3f);
-
-        velocity = Random.insideUnitCircle.normalized * swimSpeed;
+        spriteRenderer.sprite = fishData.Sprite;
         
+        noiseOffset = Random.Range(0, 1000f);
+
+        velocity = Random.insideUnitCircle.normalized * fishData.SwimSpeed;
+
         perlinNoiseProvider = new RustPerlinNoiseProvider();
     }
 
@@ -51,6 +61,21 @@ public class Fish : MonoBehaviour
         return steerDirection;
     }
 
+    private void SteerTowards(float steerDirection)
+    {
+        // How much to rotate this frame
+        var targetAngle = steerDirection * fishData.TurnSpeed * Time.deltaTime;
+
+        // Create a rotation around Z axis
+        var rotation = Quaternion.Euler(0, 0, targetAngle);
+
+        // Rotate the velocity vector
+        velocity = rotation * velocity;
+
+        // Keep speed constant
+        velocity = velocity.normalized * fishData.SwimSpeed;
+    }
+
     private void SetPosition(Vector3 targetPosition)
     {
         if (targetPosition.x < Tank.Instance.horizontalBoundary.min ||
@@ -70,21 +95,6 @@ public class Fish : MonoBehaviour
         }
 
         transform.position = targetPosition;
-    }
-
-    private void SteerTowards(float steerDirection)
-    {
-        // How much to rotate this frame
-        var targetAngle = steerDirection * turnSpeed * Time.deltaTime;
-
-        // Create a rotation around Z axis
-        var rotation = Quaternion.Euler(0, 0, targetAngle);
-
-        // Rotate the velocity vector
-        velocity = rotation * velocity;
-
-        // Keep speed constant
-        velocity = velocity.normalized * swimSpeed;
     }
 
     private void UpdateOrientation()
