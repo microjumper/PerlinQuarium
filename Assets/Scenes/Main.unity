@@ -204,7 +204,7 @@ Transform:
   m_GameObject: {fileID: 259943172}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8, y: 0, z: 0}
+  m_LocalPosition: {x: -5, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -222,8 +222,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48d307a42c6bfda4cb6ae6ae66b873e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Fish
-  fishDataTemplate: {fileID: 11400000, guid: 0443fc5e666a75e4aa41d9ac4d97d517, type: 2}
-  noiseScale: 0.5
+  fishData: {fileID: 11400000, guid: 0443fc5e666a75e4aa41d9ac4d97d517, type: 2}
+  noiseScale: 0.1
 --- !u!1 &291319946
 GameObject:
   m_ObjectHideFlags: 0

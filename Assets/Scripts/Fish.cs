@@ -1,20 +1,18 @@
 using UnityEngine;
+using Extensions;
 using Noise;
-using Random = UnityEngine.Random;
 
 public class Fish : MonoBehaviour
 {
-    [SerializeField]
-    private FishData fishData;
-    
     private SpriteRenderer spriteRenderer;
     
-    public float noiseScale = 0.5f; // Controls the "wideness" of the turns (frequency)
+    [SerializeField]
+    private FishData fishData;
 
+    [SerializeField]
+    private float noiseScale = 0.1f;
     private float noiseOffset;
-
-    private Vector2 velocity;
-
+    
     private IPerlinNoiseProvider perlinNoiseProvider;
 
     private void Awake()
@@ -28,9 +26,7 @@ public class Fish : MonoBehaviour
         
         noiseOffset = Random.Range(0, 1000f);
 
-        velocity = Random.insideUnitCircle.normalized * fishData.SwimSpeed;
-
-        perlinNoiseProvider = new RustPerlinNoiseProvider();
+        perlinNoiseProvider = new UnityPerlinNoiseProvider();
     }
 
     private void Update()
@@ -40,66 +36,31 @@ public class Fish : MonoBehaviour
 
     private void Swim()
     {
-        var steerDirection = SampleSteeringDirection();
-
-        SteerTowards(steerDirection);
-
-        var targetPosition = transform.position + (Vector3)velocity * Time.deltaTime;
-
-        SetPosition(targetPosition);
-
-        UpdateOrientation();
-    }
-
-    private float SampleSteeringDirection()
-    {
-        var noiseValue = perlinNoiseProvider.Generate2D(Time.time * noiseScale, noiseOffset);
-
-        // Map the noise (0 to 1) to a turning range [-1 to 1]
-        var steerDirection = (noiseValue * 2f) - 1f;
-
-        return steerDirection;
-    }
-
-    private void SteerTowards(float steerDirection)
-    {
-        // How much to rotate this frame
-        var targetAngle = steerDirection * fishData.TurnSpeed * Time.deltaTime;
-
-        // Create a rotation around Z axis
-        var rotation = Quaternion.Euler(0, 0, targetAngle);
-
-        // Rotate the velocity vector
-        velocity = rotation * velocity;
-
-        // Keep speed constant
-        velocity = velocity.normalized * fishData.SwimSpeed;
-    }
-
-    private void SetPosition(Vector3 targetPosition)
-    {
-        if (targetPosition.x < Tank.Instance.horizontalBoundary.min ||
-            targetPosition.x > Tank.Instance.horizontalBoundary.max)
-        {
-            velocity.x *= -1f;
-            targetPosition.x = Mathf.Clamp(targetPosition.x, Tank.Instance.horizontalBoundary.min,
-                Tank.Instance.horizontalBoundary.max);
-        }
-
-        if (targetPosition.y < Tank.Instance.verticalBoundary.min ||
-            targetPosition.y > Tank.Instance.verticalBoundary.max)
-        {
-            velocity.y *= -1f;
-            targetPosition.y = Mathf.Clamp(targetPosition.y, Tank.Instance.verticalBoundary.min,
-                Tank.Instance.verticalBoundary.max);
-        }
-
+        var targetPosition = SamplePosition();
+        
+        UpdateOrientation(targetPosition);
+        
         transform.position = targetPosition;
     }
 
-    private void UpdateOrientation()
+    private Vector3 SamplePosition()
     {
-        var direction = Mathf.Sign(velocity.x);
+        var timeScale = Time.time * noiseScale;
+        
+        var noiseValueX = Mathf.PerlinNoise1D(timeScale);
+        var noiseValueY = Mathf.PerlinNoise1D(timeScale + noiseOffset);
+        
+        var x = MathfExtensions.Map(noiseValueX, 0, 1, PlayArea2D.Instance.horizontalBoundary.Min,
+            PlayArea2D.Instance.horizontalBoundary.Max);
+        var y = MathfExtensions.Map(noiseValueY, 0, 1, PlayArea2D.Instance.verticalBoundary.Min,
+            PlayArea2D.Instance.verticalBoundary.Max);
+        
+        return new Vector3(x, y, transform.position.z);
+    }
+    
+    private void UpdateOrientation(Vector3 targetPosition)
+    {
+        var direction = Mathf.Sign(targetPosition.x - transform.position.x);
         var scale = transform.localScale;
 
         scale.x = direction;

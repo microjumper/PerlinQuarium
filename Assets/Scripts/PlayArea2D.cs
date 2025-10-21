@@ -1,15 +1,8 @@
 ﻿using UnityEngine;
 
-[System.Serializable]
-public class Boundary
+public class PlayArea2D : MonoBehaviour
 {
-    public float min = -10f;
-    public float max = 10f;
-}
-
-public class Tank : MonoBehaviour
-{
-    public static Tank Instance { get; private set; }
+    public static PlayArea2D Instance { get; private set; }
     
     public Boundary horizontalBoundary;
     public Boundary verticalBoundary;
@@ -22,7 +15,7 @@ public class Tank : MonoBehaviour
     
     private void Awake()
     {
-        if (Instance && Instance != this)
+        if (Instance&& Instance != this)
         {
             Destroy(gameObject); 
         }
@@ -36,10 +29,10 @@ public class Tank : MonoBehaviour
     {
         boundaryPoints = new Vector3[4];
         
-        boundaryPoints[0] = new Vector3(horizontalBoundary.min, verticalBoundary.min, 0f);
-        boundaryPoints[1] = new Vector3(horizontalBoundary.max, verticalBoundary.min, 0f);
-        boundaryPoints[2] = new Vector3(horizontalBoundary.max, verticalBoundary.max, 0f);
-        boundaryPoints[3] = new Vector3(horizontalBoundary.min, verticalBoundary.max, 0f);
+        boundaryPoints[0] = new Vector3(horizontalBoundary.Min, verticalBoundary.Min, 0f);
+        boundaryPoints[1] = new Vector3(horizontalBoundary.Max, verticalBoundary.Min, 0f);
+        boundaryPoints[2] = new Vector3(horizontalBoundary.Max, verticalBoundary.Max, 0f);
+        boundaryPoints[3] = new Vector3(horizontalBoundary.Min, verticalBoundary.Max, 0f);
     }
     
     private void OnDrawGizmos()
