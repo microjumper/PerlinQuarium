@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class PlayArea2D : MonoBehaviour
 {
@@ -6,12 +7,6 @@ public class PlayArea2D : MonoBehaviour
     
     public Boundary horizontalBoundary;
     public Boundary verticalBoundary;
-    
-    [Space]
-    [SerializeField]
-    private bool boundariesVisible = true;
-    
-    private Vector3[] boundaryPoints;
     
     private void Awake()
     {
@@ -23,10 +18,29 @@ public class PlayArea2D : MonoBehaviour
         {
             Instance = this;
         }
+        
+        ValidateBoundaries();
     }
+    
+    private void ValidateBoundaries()
+    {
+        if (horizontalBoundary.Min >= horizontalBoundary.Max || verticalBoundary.Min >= verticalBoundary.Max)
+        {
+            throw new ArgumentException("Invalid boundaries");
+        }
+    }
+    
+#if UNITY_EDITOR
+    [Space]
+    [SerializeField]
+    private bool boundariesVisible = true;
+    
+    private Vector3[] boundaryPoints;
     
     private void OnValidate()
     {
+        ValidateBoundaries();
+        
         boundaryPoints = new Vector3[4];
         
         boundaryPoints[0] = new Vector3(horizontalBoundary.Min, verticalBoundary.Min, 0f);
@@ -43,4 +57,5 @@ public class PlayArea2D : MonoBehaviour
             Gizmos.DrawLineStrip(boundaryPoints, true);
         }
     }
+#endif
 }

@@ -11,18 +11,5 @@ public struct Boundary
     public float Min => min;
     public float Max => max;
     
-    public Boundary(float min, float max)
-    {
-        if (min < max)
-        {
-            this.min = min;
-            this.max = max;
-        }
-        else
-        {
-            throw new System.ArgumentException("Min value must be less than max value.");
-        }
-    }
-    
     public bool Contains(float value) => value >= min && value <= max;
 }
