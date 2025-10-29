@@ -1,4 +1,4 @@
-﻿namespace Noise
+﻿namespace Noise.Perlin.Provider
 {
     public interface IPerlinNoiseProvider
     {

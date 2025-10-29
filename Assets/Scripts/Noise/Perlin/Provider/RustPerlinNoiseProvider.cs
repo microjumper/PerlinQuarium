@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace Noise
+namespace Noise.Perlin.Provider
 {
     public class RustPerlinNoiseProvider : IPerlinNoiseProvider
     {

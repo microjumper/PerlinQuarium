@@ -1,4 +1,5 @@
 ﻿using Noise;
+using Noise.Perlin.Provider;
 using UnityEngine;
 
 namespace Movement

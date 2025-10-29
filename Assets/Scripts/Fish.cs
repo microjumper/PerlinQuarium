@@ -1,6 +1,7 @@
 using UnityEngine;
 using Movement;
 using Noise;
+using Noise.Perlin.Provider;
 
 public class Fish : MonoBehaviour
 {

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Noise
+namespace Noise.Perlin.Provider
 {
     public class UnityPerlinNoiseProvider : IPerlinNoiseProvider
     {
