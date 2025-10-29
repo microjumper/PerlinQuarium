@@ -1,19 +1,15 @@
 using UnityEngine;
-using Extensions;
 using Noise;
+using Swim;
 
 public class Fish : MonoBehaviour
 {
-    private SpriteRenderer spriteRenderer;
-    
     [SerializeField]
     private FishData fishData;
-
-    [SerializeField]
-    private float noiseScale = 0.1f;
-    private float noiseOffset;
     
-    private IPerlinNoiseProvider perlinNoiseProvider;
+    private SpriteRenderer spriteRenderer;
+    
+    private ISwimBehavior swimBehavior;
 
     private void Awake()
     {
@@ -23,47 +19,19 @@ public class Fish : MonoBehaviour
     private void Start()
     {
         spriteRenderer.sprite = fishData.Sprite;
-        
-        noiseOffset = Random.Range(0, 1000f);
 
-        perlinNoiseProvider = new UnityPerlinNoiseProvider();
+        swimBehavior = new PerlinNoiseSwimBehavior(new UnityPerlinNoiseProvider());
     }
 
     private void Update()
     {
-        Swim();
+        swimBehavior.Swim(transform, fishData.SwimSpeed);
     }
 
-    private void Swim()
+    public void SetFishData(FishData newFishData)
     {
-        var targetPosition = SamplePosition();
+        fishData = newFishData;
         
-        UpdateOrientation(targetPosition);
-        
-        transform.position = targetPosition;
-    }
-
-    private Vector3 SamplePosition()
-    {
-        var timeScale = Time.time * noiseScale;
-        
-        var noiseValueX = Mathf.PerlinNoise1D(timeScale);
-        var noiseValueY = Mathf.PerlinNoise1D(timeScale + noiseOffset);
-        
-        var x = MathfExtensions.Map(noiseValueX, 0, 1, PlayArea2D.Instance.horizontalBoundary.Min,
-            PlayArea2D.Instance.horizontalBoundary.Max);
-        var y = MathfExtensions.Map(noiseValueY, 0, 1, PlayArea2D.Instance.verticalBoundary.Min,
-            PlayArea2D.Instance.verticalBoundary.Max);
-        
-        return new Vector3(x, y, transform.position.z);
-    }
-    
-    private void UpdateOrientation(Vector3 targetPosition)
-    {
-        var direction = Mathf.Sign(targetPosition.x - transform.position.x);
-        var scale = transform.localScale;
-
-        scale.x = direction;
-        transform.localScale = scale;
+        spriteRenderer.sprite = fishData.Sprite;
     }
 }

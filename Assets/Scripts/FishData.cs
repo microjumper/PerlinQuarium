@@ -12,8 +12,4 @@ public class FishData : ScriptableObject
     [SerializeField]
     private float swimSpeed;
     public float SwimSpeed => swimSpeed;
-    [Tooltip("How fast the fish can change the direction")]
-    [SerializeField]
-    private float turnSpeed;
-    public float TurnSpeed => turnSpeed;
 }

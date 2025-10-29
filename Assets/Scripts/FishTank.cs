@@ -1,26 +1,10 @@
 ﻿using System;
 using UnityEngine;
 
-public class PlayArea2D : MonoBehaviour
+public class FishTank : MonoBehaviour
 {
-    public static PlayArea2D Instance { get; private set; }
-    
-    public Boundary horizontalBoundary;
-    public Boundary verticalBoundary;
-    
-    private void Awake()
-    {
-        if (Instance&& Instance != this)
-        {
-            Destroy(gameObject); 
-        }
-        else
-        {
-            Instance = this;
-        }
-        
-        ValidateBoundaries();
-    }
+    public Boundary horizontalBoundary = new (-9, 9);
+    public Boundary verticalBoundary = new (-5, 5);
     
     private void ValidateBoundaries()
     {
