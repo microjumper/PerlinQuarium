@@ -1,9 +1,9 @@
 ﻿using Noise;
 using UnityEngine;
 
-namespace Swim
+namespace Movement
 {
-    public class PerlinNoiseSwimBehavior : ISwimBehavior
+    public class PerlinNoiseMovementProvider : IMovementProvider
     {
         private const float NoiseScale = 0.1f;
         
@@ -12,7 +12,7 @@ namespace Swim
         private readonly float noiseOffsetX;
         private readonly float noiseOffsetY;
 
-        public PerlinNoiseSwimBehavior(IPerlinNoiseProvider perlinNoiseProvider)
+        public PerlinNoiseMovementProvider(IPerlinNoiseProvider perlinNoiseProvider)
         {
             this.perlinNoiseProvider = perlinNoiseProvider;
             
@@ -20,7 +20,7 @@ namespace Swim
             noiseOffsetY = Random.Range(0, 1000f);
         }
         
-        public void Swim(Transform transform, float swimSpeed)
+        public Vector3 ProvideVelocityVector()
         {
             var timeScale = Time.time * NoiseScale;
 
@@ -30,11 +30,9 @@ namespace Swim
             var x = Extensions.MathfExtensions.Map(noiseValueX, 0, 1, -1, 1);
             var y = Extensions.MathfExtensions.Map(noiseValueY, 0, 1, -1, 1);
             
-            var velocity = new Vector3(x, y, 0).normalized * (Time.deltaTime * swimSpeed);
-
-            transform.rotation = Quaternion.Euler(0, velocity.x >= 0 ? 0 : 180, 0);
-
-            transform.Translate(velocity, Space.World);
+            var velocity = new Vector3(x, y, 0);
+            
+            return velocity;
         }
     }
 }

@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   fishTank: {fileID: 291319949}
-  poolCapacity: 10
+  poolCapacity: 20
   poolMaxSize: 25
   fishPrefab: {fileID: 5601138911898382833, guid: 36a6c5492b919624da7407280eaa2db2, type: 3}
   fishData:
@@ -232,8 +232,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Tank
   horizontalBoundary:
-    min: -8.5
-    max: 8.5
+    min: -8.35
+    max: 8.25
   verticalBoundary:
     min: -2.75
     max: 4.6

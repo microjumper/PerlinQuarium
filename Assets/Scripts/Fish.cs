@@ -1,6 +1,6 @@
 using UnityEngine;
+using Movement;
 using Noise;
-using Swim;
 
 public class Fish : MonoBehaviour
 {
@@ -9,23 +9,49 @@ public class Fish : MonoBehaviour
     
     private SpriteRenderer spriteRenderer;
     
-    private ISwimBehavior swimBehavior;
+    private FishTank fishTank;
+    
+    private IMovementProvider movementProvider;
 
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.sprite = fishData.Sprite;
     }
 
     private void Start()
     {
-        spriteRenderer.sprite = fishData.Sprite;
-
-        swimBehavior = new PerlinNoiseSwimBehavior(new UnityPerlinNoiseProvider());
+        movementProvider = new PerlinNoiseMovementProvider(new UnityPerlinNoiseProvider());
     }
 
     private void Update()
     {
-        swimBehavior.Swim(transform, fishData.SwimSpeed);
+        Swim();
+    }
+
+    private void Swim()
+    {
+        var velocity = movementProvider.ProvideVelocityVector();
+        var delta = velocity.normalized * (Time.deltaTime * fishData.SwimSpeed);
+        
+        var targetPosition = transform.position + delta;
+
+        if (fishTank)
+        {
+            if (!fishTank.horizontalBoundary.Contains(targetPosition.x))
+            {
+                targetPosition.x = fishTank.horizontalBoundary.Clamp(targetPosition.x);
+            }
+
+            if (!fishTank.verticalBoundary.Contains(targetPosition.y))
+            {
+                targetPosition.y = fishTank.verticalBoundary.Clamp(targetPosition.y);
+            }
+        }
+
+        transform.position = targetPosition;
+        
+        transform.rotation = Quaternion.Euler(0, delta.x >= 0 ? 0 : 180, 0);
     }
 
     public void SetFishData(FishData newFishData)
@@ -34,4 +60,6 @@ public class Fish : MonoBehaviour
         
         spriteRenderer.sprite = fishData.Sprite;
     }
+    
+    public void SetFishTank(FishTank newFishTank) => fishTank = newFishTank;
 }

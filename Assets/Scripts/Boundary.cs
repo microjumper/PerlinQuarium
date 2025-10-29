@@ -24,5 +24,7 @@ public struct Boundary
         }
     }
     
+    public float Clamp(float value) => Mathf.Clamp(value, min, max);
+    
     public bool Contains(float value) => value >= min && value <= max;
 }

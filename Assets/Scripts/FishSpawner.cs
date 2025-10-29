@@ -46,8 +46,12 @@ public class FishSpawner : MonoBehaviour
         var fishObject = Instantiate(fishPrefab, poolContainer.transform, true);
         fishObject.SetActive(false);
         
+        var fish = fishObject.GetComponent<Fish>();
+        
         var fishDataIndex = Random.Range(0, fishData.Length);
-        fishObject.GetComponent<Fish>().SetFishData(fishData[fishDataIndex]);
+        fish.SetFishData(fishData[fishDataIndex]);
+        
+        fish.SetFishTank(fishTank);
         
         var randomPosition = GenerateRandomPositionWithinBoundaries();
         fishObject.transform.position = randomPosition;
