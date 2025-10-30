@@ -1,7 +1,6 @@
 using UnityEngine;
-using Movement;
-using Noise;
-using Noise.Perlin.Provider;
+using Noise.Generators;
+using Noise.Perlin.Providers;
 
 public class Fish : MonoBehaviour
 {
@@ -12,7 +11,7 @@ public class Fish : MonoBehaviour
     
     private FishTank fishTank;
     
-    private IMovementProvider movementProvider;
+    private INoiseGenerator noiseGenerator;
 
     private void Awake()
     {
@@ -22,7 +21,7 @@ public class Fish : MonoBehaviour
 
     private void Start()
     {
-        movementProvider = new PerlinNoiseMovementProvider(new UnityPerlinNoiseProvider());
+        noiseGenerator = new PerlinNoiseGenerator(new UnityPerlinNoiseProvider());
     }
 
     private void Update()
@@ -32,27 +31,28 @@ public class Fish : MonoBehaviour
 
     private void Swim()
     {
-        var velocity = movementProvider.ProvideVelocityVector();
-        var delta = velocity.normalized * (Time.deltaTime * fishData.SwimSpeed);
+        var velocity= noiseGenerator.GenerateVector2();
+        
+        var delta = (Vector3)velocity.normalized * (Time.deltaTime * fishData.SwimSpeed);
         
         var targetPosition = transform.position + delta;
 
-        if (fishTank)
+        if (!fishTank.HorizontalBoundary.Contains(targetPosition.x))
         {
-            if (!fishTank.horizontalBoundary.Contains(targetPosition.x))
-            {
-                targetPosition.x = fishTank.horizontalBoundary.Clamp(targetPosition.x);
-            }
-
-            if (!fishTank.verticalBoundary.Contains(targetPosition.y))
-            {
-                targetPosition.y = fishTank.verticalBoundary.Clamp(targetPosition.y);
-            }
+            targetPosition.x = fishTank.HorizontalBoundary.Clamp(targetPosition.x);
         }
 
-        transform.position = targetPosition;
+        if (!fishTank.VerticalBoundary.Contains(targetPosition.y))
+        {
+            targetPosition.y = fishTank.VerticalBoundary.Clamp(targetPosition.y);
+        }
         
-        transform.rotation = Quaternion.Euler(0, delta.x >= 0 ? 0 : 180, 0);
+        transform.position = targetPosition;
+
+        if (velocity.magnitude > 0.01f)
+        {
+            transform.rotation = Quaternion.Euler(0, delta.x >= 0 ? 0 : 180, 0);
+        }
     }
 
     public void SetFishData(FishData newFishData)

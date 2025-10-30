@@ -149,8 +149,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   fishTank: {fileID: 291319949}
-  poolCapacity: 20
-  poolMaxSize: 25
+  poolCapacity: 25
+  poolMaxSize: 50
   fishPrefab: {fileID: 5601138911898382833, guid: 36a6c5492b919624da7407280eaa2db2, type: 3}
   fishData:
   - {fileID: 11400000, guid: 42cc5f66dd0cf6a49b7b19b390810be0, type: 2}

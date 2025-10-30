@@ -3,8 +3,17 @@ using UnityEngine;
 
 public class FishTank : MonoBehaviour
 {
-    public Boundary horizontalBoundary = new (-9, 9);
-    public Boundary verticalBoundary = new (-5, 5);
+    [SerializeField]
+    private Boundary horizontalBoundary = new (-9, 9);
+    [SerializeField]
+    private Boundary verticalBoundary = new (-5, 5);
+    
+    public Boundary HorizontalBoundary => horizontalBoundary;
+    public Boundary VerticalBoundary => verticalBoundary;
+    
+    public float Width => horizontalBoundary.Size;
+    public float Height => verticalBoundary.Size;
+    public Vector2 Center => new (horizontalBoundary.Center, verticalBoundary.Center);
     
     private void ValidateBoundaries()
     {

@@ -75,8 +75,8 @@ public class FishSpawner : MonoBehaviour
     
     private Vector3 GenerateRandomPositionWithinBoundaries()
     {
-        var x = Random.Range(fishTank.horizontalBoundary.Min, fishTank.horizontalBoundary.Max);
-        var y = Random.Range(fishTank.verticalBoundary.Min, fishTank.verticalBoundary.Max);
+        var x = Random.Range(fishTank.HorizontalBoundary.Min, fishTank.HorizontalBoundary.Max);
+        var y = Random.Range(fishTank.VerticalBoundary.Min, fishTank.VerticalBoundary.Max);
         
         return new Vector3(x, y, 0f);
     }

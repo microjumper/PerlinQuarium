@@ -1,6 +1,7 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 
-namespace Noise.Perlin.Provider
+namespace Noise.Perlin.Providers
 {
     public class RustPerlinNoiseProvider : IPerlinNoiseProvider
     {
@@ -8,7 +9,10 @@ namespace Noise.Perlin.Provider
         private static extern float perlin_noise_2d(float x, float y);
         
         public float Generate2D(float x, float y) => perlin_noise_2d(x, y);
-        
-        public float Generate1D(float x) => 0; // TODO
+
+        public float Generate1D(float x)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
