@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: BlueFish
   m_EditorClassIdentifier: Assembly-CSharp::FishData
   sprite: {fileID: 21300000, guid: 803f4cea2a7bcbd45a4478e04f938a4c, type: 3}
-  swimSpeed: 0.25
+  swimSpeed: 0.5

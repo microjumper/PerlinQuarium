@@ -17,11 +17,11 @@ namespace Noise.Generators
         {
             this.perlinNoiseProvider = perlinNoiseProvider;
             
-            noiseOffsetX = Random.Range(0, 1000f);
-            noiseOffsetY = Random.Range(0, 1000f);
+            noiseOffsetX = Random.Range(1, 999f);
+            noiseOffsetY = Random.Range(1, 999f);
         }
 
-        public Vector2 GenerateVector2()
+        public Vector2 GenerateUnitVector2()
         {
             var t = Time.time * TimeScale;
             
@@ -30,6 +30,19 @@ namespace Noise.Generators
             
             var x = MathfExtensions.Map(noiseValueX, 0, 1, -1, 1);
             var y = MathfExtensions.Map(noiseValueY, 0, 1, -1, 1);
+            
+            return new Vector2(x, y).normalized;
+        }
+
+        public Vector2 GeneratePositionWithinBoundaries(Boundary horizontalBoundary, Boundary verticalBoundary)
+        {
+            var t = Time.time * TimeScale;
+            
+            var noiseValueX = perlinNoiseProvider.Generate2D(t + noiseOffsetX, noiseOffsetY);
+            var noiseValueY = perlinNoiseProvider.Generate2D(noiseOffsetX, t + noiseOffsetY);
+            
+            var x = MathfExtensions.Map(noiseValueX, 0, 1, horizontalBoundary.Min, horizontalBoundary.Max);
+            var y = MathfExtensions.Map(noiseValueY, 0, 1, verticalBoundary.Min, verticalBoundary.Max);
             
             return new Vector2(x, y);
         }

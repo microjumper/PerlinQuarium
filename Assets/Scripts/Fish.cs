@@ -26,33 +26,21 @@ public class Fish : MonoBehaviour
 
     private void Update()
     {
-        Swim();
+        SwimWithinBoundaries();
     }
 
-    private void Swim()
+    private void SwimWithinBoundaries()
     {
-        var velocity= noiseGenerator.GenerateVector2();
+        var targetPosition = noiseGenerator.GeneratePositionWithinBoundaries(fishTank.HorizontalBoundary, fishTank.VerticalBoundary);
         
-        var delta = (Vector3)velocity.normalized * (Time.deltaTime * fishData.SwimSpeed);
+        var delta = targetPosition.x - transform.position.x;
         
-        var targetPosition = transform.position + delta;
-
-        if (!fishTank.HorizontalBoundary.Contains(targetPosition.x))
+        if (Mathf.Abs(delta) > 0.001f)
         {
-            targetPosition.x = fishTank.HorizontalBoundary.Clamp(targetPosition.x);
+            transform.localScale = new Vector3(Mathf.Sign(delta), 1f, 1f);
         }
 
-        if (!fishTank.VerticalBoundary.Contains(targetPosition.y))
-        {
-            targetPosition.y = fishTank.VerticalBoundary.Clamp(targetPosition.y);
-        }
-        
-        transform.position = targetPosition;
-
-        if (velocity.magnitude > 0.01f)
-        {
-            transform.rotation = Quaternion.Euler(0, delta.x >= 0 ? 0 : 180, 0);
-        }
+        transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * fishData.SwimSpeed);
     }
 
     public void SetFishData(FishData newFishData)
